@@ -1,0 +1,47 @@
+---
+
+# basic system tasks
+
+- name: set locale to {{locale}}
+  action: command /usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}
+  sudo: yes
+
+- name: get tomcat packages for geoserver
+  apt: name={{item}} state=latest install_recommends=yes update_cache=yes
+  sudo: yes
+  with_items:
+    - build-essential
+    - unzip
+    - tomcat7
+    - tomcat7-admin
+    - tomcat7-docs 
+    - tomcat7-admin 
+    - tomcat7-examples
+    - git
+    - ant
+    - default-jdk
+
+# just tomcat things
+
+- name: create tomcat_users.xml from template
+  template: src=tomcat_users.xml.j2 dest=/etc/tomcat7/tomcat-users.xml owner=root group=root mode=0644
+  sudo: yes
+
+- name: restart tomcat
+  service: name=tomcat7 state=restarted
+  sudo: yes
+
+# download the geoserver .war file
+
+- name: get the geoserver .war
+  get_url: url=http://sourceforge.net/projects/geoserver/files/GeoServer/2.7.0/geoserver-2.7.0-war.zip dest=/vagrant/geoserver.war.zip force=no
+  sudo: yes
+  ignore_errors: yes
+
+- name: unzip the geoserver .war file into its destination directory
+  unarchive: src=/vagrant/geoserver.war.zip dest=/var/lib/tomcat7/webapps copy=no
+  sudo: yes
+
+- name: restart tomcat
+  service: name=tomcat7 state=restarted
+  sudo: yes  
