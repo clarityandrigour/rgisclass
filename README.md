@@ -64,11 +64,14 @@ ALL OF THE INSTRUCTIONS EXCEPT FOR THIS ONE ARE DISCRETIONARY:
 
 The data for the R tutorial are installed in ```dheerajgrassdata.zip```.
 
+The PDF of the tutorial is in ```tutorial_pdf.zip```.  Decompress it by whatever method you choose and keep it handy.
+
 To access it, here is what you must do:
 
 ```
 vagrant ssh
 unzip /vagrant/dheerajgrassdata.zip
+unzip /vagrant/tutorial_pdf.zip
 ```
 
 From that point on, any file in it is accessible via the R on the virtual machine.
