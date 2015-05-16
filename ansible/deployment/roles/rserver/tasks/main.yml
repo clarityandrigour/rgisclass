@@ -6,11 +6,6 @@
   action: command /usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}
   sudo: yes
 
-# - name: add rstudio cran ubuntu repository to get the latest version of R
-#   apt_repository: repo="deb http://cran.r-project.org/bin/linux/ubuntu/ trusty" state=present
-#   sudo: yes
-#   ignore_errors: yes
-
 # manual workaround to add CRAN repository this is ugly fix later
 
 - name: manually add CRAN repository to apt
@@ -36,6 +31,8 @@
     - unzip
     - libgl1-mesa-dev 
     - libglu1-mesa-dev
+    - xauth
+    - openbox
 
 # a different way to install R packages http://adamj.eu/tech/2014/07/19/installing-and-removing-r-packages-with-ansible/
 
@@ -165,6 +162,11 @@
   changed_when: "'Added' in r_result.stdout"
   sudo: yes
   with_items:
-    - RPostgresql
+    - RPostgreSQL
     - RSQLite
     - RODBC
+
+- name: second round of R packages installation check
+  command: Rscript --slave --no-save --no-restore-history /vagrant/r-requirements.R
+  sudo: yes
+
