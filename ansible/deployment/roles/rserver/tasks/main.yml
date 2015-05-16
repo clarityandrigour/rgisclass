@@ -14,6 +14,8 @@
     - unzip
     - r-base
     - r-base-dev
+    - libgdal-dev
+    - libproj-dev
 
 - name: execute the R script to install packages
   shell: /usr/bin/Rscript --slave --no-save --no-restore-history /vagrant/r-requirements.R

@@ -76,7 +76,6 @@ unzip /vagrant/tutorial_pdf.zip
 
 From that point on, any file in it is accessible via the R on the virtual machine.
 
-
 You will need to edit the vars.yaml file. This file contains the project name, usernames and passwords. Please set them according to your preferences. ***THIS IS NON-DISCRETIONARY. Tomcat will not run correctly without this.***
 
 Start VM with Vagrant. This will use Ansible to install dependencies and run a script to set up virtual environment and pip requirements.
