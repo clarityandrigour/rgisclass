@@ -17,6 +17,131 @@
     - libgdal-dev
     - libproj-dev
 
-- name: execute the R script to install packages
-  shell: /usr/bin/Rscript --slave --no-save --no-restore-history /vagrant/r-requirements.R
-  sudo: yes
+# - name: execute the R script to install packages
+#   shell: /usr/bin/Rscript --slave --no-save --no-restore-history /vagrant/r-requirements.R
+#   sudo: yes
+  
+# a different way to install R packages http://adamj.eu/tech/2014/07/19/installing-and-removing-r-packages-with-ansible/
+
+- name: r - packages <-- core
+  command: >
+    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
+  register: r_result
+  failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
+  changed_when: "'Added' in r_result.stdout"
+  with_items:
+    - classInt
+    - DCluster
+    - deldir
+    - geoR
+    - gstat
+    - maptools
+    - RandomFields
+    - raster
+    - RColorBrewer
+    - rgdal
+    - sp
+    - spatstat
+    - spdep
+    - splancs
+    - spgrass6
+    - rgeos
+    - ncdf
+    - RSAGA
+
+- name: r - packages <-- optional
+  command: >
+    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
+  register: r_result
+  failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
+  changed_when: "'Added' in r_result.stdout"
+  with_items:
+    - ade4
+    - adehabitat
+    - adehabitatHR
+    - adehabitatHS
+    - adehabitatLT
+    - adehabitatMA
+    - ads
+    - akima
+    - ash
+    - aspace
+    - automap
+    - CircSpatial
+    - clustTool
+    - CompRandFld
+    - constrainedKriging
+    - cshapes
+    - diseasemapping
+    - DSpat
+    - ecespa
+    - fields
+    - FieldSim
+    - gdistance
+    - Geneland
+    - GEOmap
+    - geomapdata
+    - geonames
+    - geoRglm
+    - geosphere
+    - GeoXp
+    - glmmBUGS
+    - gmaps
+    - gmt
+    - Guerry
+    - hdeco
+    - intamap
+    - mapdata
+    - mapproj
+    - maps
+    - MarkedPointProcess
+    - MBA
+    - ModelMap
+    - ncf
+    - nlme
+    - pastecs
+    - PBSmapping
+    - PBSmodelling
+    - psgp
+    - ramps
+    - RArcInfo
+    - regress
+    - RgoogleMaps
+    - RPyGeo
+    - RSurvey
+    - rworldmap
+    - sgeostat
+    - shapefiles
+    - sparr
+    - spatcounts
+    - spatgraphs
+    - spatial
+    - spatialCovariance
+    - SpatialExtremes
+    - spatialkernel
+    - spatialsegregation
+    - spBayes
+    - spcosa
+    - spgwr
+    - sphet
+    - spsurvey
+    - SQLiteMap
+    - Stem
+    - tgp
+    - trip
+    - tripack
+    - tripEstimation
+    - UScensus2000
+    - vardiag
+    - vegan
+
+- name: r - packages <-- non-spatial 
+  command: >
+    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
+  register: r_result
+  failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
+  changed_when: "'Added' in r_result.stdout"
+  with_items:
+    - RPostgresql
+    - RSQLite
+    - RODBC
