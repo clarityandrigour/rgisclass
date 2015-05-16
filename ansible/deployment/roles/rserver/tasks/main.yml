@@ -7,14 +7,8 @@
   sudo: yes
 
 - name: add rstudio cran ubuntu repository to get the latest version of R
-  apt_repository: repo='deb http://cran.r-project.org/bin/linux/ubuntu/ trusty' state=present
+  lineinfile: dest=/etc/apt/sources.list line=deb http://cran.r-project.org/bin/linux/ubuntu/ trusty
   sudo: yes
-
-- name: add the key for the new cran ubuntu repository to the apt-application
-  apt_key: keyserver=keyserver.ubuntu.com id=E084DAB9
-  sudo: yes 
-  ignore_errors: yes
-
 
 - name: get r-server packages
   apt: name={{item}} state=latest install_recommends=yes update_cache=yes
@@ -27,10 +21,6 @@
     - libgdal-dev
     - libproj-dev
 
-# - name: execute the R script to install packages
-#   shell: /usr/bin/Rscript --slave --no-save --no-restore-history /vagrant/r-requirements.R
-#   sudo: yes
-  
 # a different way to install R packages http://adamj.eu/tech/2014/07/19/installing-and-removing-r-packages-with-ansible/
 
 - name: r - packages <-- core
