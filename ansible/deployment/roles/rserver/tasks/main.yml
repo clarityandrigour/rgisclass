@@ -6,8 +6,19 @@
   action: command /usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}
   sudo: yes
 
-- name: add rstudio cran ubuntu repository to get the latest version of R
-  lineinfile: dest=/etc/apt/sources.list line=deb http://cran.r-project.org/bin/linux/ubuntu/ trusty
+# - name: add rstudio cran ubuntu repository to get the latest version of R
+#   apt_repository: repo="deb http://cran.r-project.org/bin/linux/ubuntu/ trusty" state=present
+#   sudo: yes
+#   ignore_errors: yes
+
+# manual workaround to add CRAN repository this is ugly fix later
+
+- name: manually add CRAN repository to apt
+  shell: echo "deb http://stat.ethz.ch/CRAN/bin/linux/ubuntu trusty/" >> /etc/apt/sources.list
+  sudo: yes
+  
+- name: manually add CRAN key from keyserver
+  shell: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
   sudo: yes
 
 - name: get r-server packages
@@ -29,6 +40,7 @@
   register: r_result
   failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
   changed_when: "'Added' in r_result.stdout"
+  sudo: yes
   with_items:
     - classInt
     - DCluster
@@ -56,6 +68,7 @@
   register: r_result
   failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
   changed_when: "'Added' in r_result.stdout"
+  sudo: yes
   with_items:
     - ade4
     - adehabitat
@@ -142,6 +155,7 @@
   register: r_result
   failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
   changed_when: "'Added' in r_result.stdout"
+  sudo: yes
   with_items:
     - RPostgresql
     - RSQLite
