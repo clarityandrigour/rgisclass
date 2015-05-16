@@ -24,13 +24,18 @@
 - name: get r-server packages
   apt: name={{item}} state=latest install_recommends=yes update_cache=yes
   sudo: yes
+  ignore_errors: yes
   with_items:
     - build-essential
-    - unzip
-    - r-base
-    - r-base-dev
     - libgdal-dev
     - libproj-dev
+    - netcdf-bin
+    - r-base
+    - r-base-dev
+    - tk8.6-dev
+    - unzip
+    - libgl1-mesa-dev 
+    - libglu1-mesa-dev
 
 # a different way to install R packages http://adamj.eu/tech/2014/07/19/installing-and-removing-r-packages-with-ansible/
 
@@ -41,6 +46,7 @@
   failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
   changed_when: "'Added' in r_result.stdout"
   sudo: yes
+  ignore_errors: yes
   with_items:
     - classInt
     - DCluster
@@ -48,19 +54,20 @@
     - geoR
     - gstat
     - maptools
+    - ncdf
+    - plyr
     - RandomFields
     - raster
     - RColorBrewer
     - rgdal
+    - rgeos
+    - RSAGA
     - sp
     - spatstat
     - spdep
-    - splancs
     - spgrass6
-    - rgeos
-    - ncdf
-    - RSAGA
-    - plyr
+    - splancs
+
 
 - name: r - packages <-- optional
   command: >
@@ -69,6 +76,7 @@
   failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
   changed_when: "'Added' in r_result.stdout"
   sudo: yes
+  ignore_errors: yes
   with_items:
     - ade4
     - adehabitat
