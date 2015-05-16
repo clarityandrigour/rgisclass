@@ -26,7 +26,7 @@
       - git
 
 - name: do upgrades to newly installed packages
-  action: apt upgrade=dist
+  action: apt upgrade=yes
   sudo: yes
 
 - name: Download spf13 vim install script
@@ -35,5 +35,7 @@
 - name: launch spf13 install script
   command: sh /vagrant/{{ spf13_output_file_name }}
   sudo: yes
+  register: spf13installed
+  when: spf13installed is not defined
 
 

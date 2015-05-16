@@ -6,6 +6,15 @@
   action: command /usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}
   sudo: yes
 
+- name: add rstudio cran ubuntu repository to get the latest version of R
+  apt_repository: repo='http://cran.rstudio.com/bin/linux/ubuntu trusty' state=present
+  sudo: yes
+
+- name: add the key for the new cran ubuntu repository to the apt-application
+  apt_key: keyserver=keyserver.ubuntu.com id=E084DAB9
+  sudo: yes 
+
+
 - name: get r-server packages
   apt: name={{item}} state=latest install_recommends=yes update_cache=yes
   sudo: yes
@@ -25,7 +34,7 @@
 
 - name: r - packages <-- core
   command: >
-    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
+    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', dependencies=TRUE, repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
   register: r_result
   failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
   changed_when: "'Added' in r_result.stdout"
@@ -48,10 +57,11 @@
     - rgeos
     - ncdf
     - RSAGA
+    - plyr
 
 - name: r - packages <-- optional
   command: >
-    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
+    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', dependencies=TRUE, repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
   register: r_result
   failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
   changed_when: "'Added' in r_result.stdout"
@@ -137,7 +147,7 @@
 
 - name: r - packages <-- non-spatial 
   command: >
-    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
+    Rscript --slave --no-save --no-restore-history -e "if (! ('{{ item }}' %in% installed.packages()[,'Package'])) { install.packages(pkgs='{{ item }}', dependencies=TRUE, repos=c('http://cran.rstudio.com/')); print('Added'); } else { print('Already installed'); }"
   register: r_result
   failed_when: "r_result.rc != 0 or 'had non-zero exit status' in r_result.stderr"
   changed_when: "'Added' in r_result.stdout"
