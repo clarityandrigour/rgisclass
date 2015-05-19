@@ -23,16 +23,17 @@
   with_items:
     - build-essential
     - libgdal-dev
+    - libgl1-mesa-dev 
+    - libglu1-mesa-dev
     - libproj-dev
     - netcdf-bin
+    - openbox
     - r-base
     - r-base-dev
     - tk8.6-dev
+    - tmux
     - unzip
-    - libgl1-mesa-dev 
-    - libglu1-mesa-dev
     - xauth
-    - openbox
 
 # a different way to install R packages http://adamj.eu/tech/2014/07/19/installing-and-removing-r-packages-with-ansible/
 
